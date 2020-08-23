@@ -18,6 +18,7 @@
 		F46A274724F169E900484000 /* SolutionPlaygroundUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46A274624F169E900484000 /* SolutionPlaygroundUITests.swift */; };
 		F46A3AC124F210C200484000 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46A3AC024F210C200484000 /* AppState.swift */; };
 		F46A3AC324F210F900484000 /* StateStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46A3AC224F210F900484000 /* StateStore.swift */; };
+		F4F29C7224F21E95003106EF /* AppStateChildViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F29C7124F21E95003106EF /* AppStateChildViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +56,7 @@
 		F46A274824F169E900484000 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F46A3AC024F210C200484000 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		F46A3AC224F210F900484000 /* StateStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateStore.swift; sourceTree = "<group>"; };
+		F4F29C7124F21E95003106EF /* AppStateChildViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStateChildViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -108,7 +110,7 @@
 				F46A3ABF24F210B000484000 /* State */,
 				F46A272224F169E800484000 /* AppDelegate.swift */,
 				F46A272424F169E800484000 /* SceneDelegate.swift */,
-				F46A272624F169E800484000 /* AppStateMainViewController.swift */,
+				F4F29C7324F21EA1003106EF /* AppStateDemo */,
 				F46A272824F169E800484000 /* Main.storyboard */,
 				F46A272B24F169E800484000 /* ContentView.swift */,
 				F46A272D24F169E800484000 /* Assets.xcassets */,
@@ -143,6 +145,15 @@
 				F46A3AC224F210F900484000 /* StateStore.swift */,
 			);
 			path = State;
+			sourceTree = "<group>";
+		};
+		F4F29C7324F21EA1003106EF /* AppStateDemo */ = {
+			isa = PBXGroup;
+			children = (
+				F46A272624F169E800484000 /* AppStateMainViewController.swift */,
+				F4F29C7124F21E95003106EF /* AppStateChildViewController.swift */,
+			);
+			path = AppStateDemo;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -276,6 +287,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F46A272724F169E800484000 /* AppStateMainViewController.swift in Sources */,
+				F4F29C7224F21E95003106EF /* AppStateChildViewController.swift in Sources */,
 				F46A3AC124F210C200484000 /* AppState.swift in Sources */,
 				F46A272324F169E800484000 /* AppDelegate.swift in Sources */,
 				F46A272C24F169E800484000 /* ContentView.swift in Sources */,

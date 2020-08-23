@@ -31,7 +31,8 @@ extension AppState: DiffableState {
 
 protocol AppStateReadable {
     func onChange(_ keyPath: PartialKeyPath<AppState>,
-                  block: @escaping (_ state: AppState, _ keyPath: PartialKeyPath<AppState>) -> Void)
+                  block: @escaping (_ state: AppState, _ keyPath: PartialKeyPath<AppState>) -> Void) -> StateStore<AppState>.Subscription
+    
 }
 
 extension StateStore: AppStateReadable where State == AppState {}
