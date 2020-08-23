@@ -8,31 +8,22 @@
 import UIKit
 import SwiftUI
 
-class State: ObservableObject {
+class ChildViewState: ObservableObject {
     @Published var seconds: Int = 0
     
-    private var subscription: StateStore<AppState>.Subscription?
+    let stateReader: AppStateReadable
+    private var subscription: Subscription!
     
-    var stateReader: AppStateReadable! {
-        didSet(old) {
-            didChangeStateReader(from: old)
+    init(_ stateReader: AppStateReadable) {
+        self.stateReader = stateReader
+        self.subscription = stateReader.onChangeSecond { [weak self] in
+            self?.seconds = $0
         }
     }
-    
-    func didChangeStateReader(from old: AppStateReadable?) {
-        
-        guard let reader = stateReader else { return }
-        
-        self.subscription = reader.onChange(\AppState.second) { [weak self] (state, keyPath) in
-            guard let seconds = state[keyPath: keyPath] as? Int else { return }
-            self?.seconds = seconds
-        }
-    }
-
 }
 
 struct AppStateChildView: View {
-    @EnvironmentObject var state: State
+    @EnvironmentObject var state: ChildViewState
     var body: some View {
         VStack {
             Text("Second View: \(state.seconds)").font(.system(size: 36))
@@ -45,7 +36,7 @@ struct AppStateChildView: View {
 struct AppStateChildViewController_Previews: PreviewProvider {
     static var previews: some View {
         AppStateChildView()
-            .environmentObject(State()) as! AppStateChildView
+            .environmentObject(ChildViewState(AppState.reader())) as! AppStateChildView
 
     }
 }

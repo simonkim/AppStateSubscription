@@ -10,39 +10,51 @@ import SwiftUI
 
 class AppStateMainViewController: UIViewController {
 
-    var stateUpdater: AppStateUpdatable!
-    var stateReader: AppStateReadable!
+    var updater = AppState.updater()
+    var reader = AppState.reader()
     
-    var disposeBag: [StateStore<AppState>.Subscription] = []
+    var disposeBag: [Subscription] = []
     var count = 0
         
     override func viewDidLoad() {
         super.viewDidLoad()
                 
-        let sub1 = stateReader.onChange(\AppState.count) { [weak self] state, keyPath in
-            guard let count = state[keyPath: keyPath] as? Int else { return }
-            self?.didUpdateCount(count)
+        let sub1 = reader.onChangeCount { [weak self]  in
+            self?.didUpdateCount($0)
         }
-        let sub2 = stateReader.onChange(\AppState.second) { [weak self] (state, keyPath) in
-            guard let second = state[keyPath: keyPath] as? Int else { return }
-            self?.labelSeconds.text = "\(second)"
-            if (second % 10 ) == 0 { self?.removeChildView() }
-            if (second % 10 ) == 5 { self?.addChildView() }
+        let sub2 = reader.onChangeSecond { [weak self] in
+            self?.didUpdateSecond($0)
         }
         
         disposeBag = [sub1, sub2]
     }
     
-    var childViewController: UIViewController?
+    func didUpdateCount(_ count: Int) {
+        print("count: \(count)")
+
+        self.count = count
+        labelCount.text = "\(count)"
+        slider.value = Float(count)
+        stepper.value = Double(count)
+    }
+    
+    func didUpdateSecond(_ second: Int) {
+        labelSeconds.text = "\(second)"
+        if (second % 10 ) == 0 { removeChildView() }
+        if (second % 10 ) == 5 { addChildView() }
+    }
+    
+    private var childViewController: UIViewController?
     
     private func addChildView() {
         
         guard childViewController == nil else { return  }
         
-        let state = State()
-        state.stateReader = stateReader
-
-        let childViewController = UIHostingController(rootView: AppStateChildView().environmentObject(state))
+        let childViewController = UIHostingController(
+            rootView: AppStateChildView()
+                .environmentObject(ChildViewState(reader))
+        )
+        
         childView.addSubview(childViewController.view)
         addChild(childViewController)
         childViewController.didMove(toParent: self)
@@ -66,16 +78,6 @@ class AppStateMainViewController: UIViewController {
         childViewController.view.removeFromSuperview()
         self.childViewController = nil
     }
-    
-    func didUpdateCount(_ count: Int) {
-        print("count: \(count)")
-
-        self.count = count
-        labelCount.text = "\(count)"
-        slider.value = Float(count)
-        stepper.value = Double(count)
-    }
-    
     @IBOutlet weak var labelCount: UILabel!
     @IBOutlet weak var labelSeconds: UILabel!
     @IBOutlet weak var slider: UISlider!
@@ -85,7 +87,7 @@ class AppStateMainViewController: UIViewController {
     @IBAction func didChangeValue(_ sender: UIControl) {
         
         var changeCount = 0
-        var changeAction: StateChange? = nil
+        var changeAction: UpdateAction? = nil
         
         switch sender {
         case slider:
@@ -106,7 +108,7 @@ class AppStateMainViewController: UIViewController {
         
         guard let action = changeAction else { return }
         for _ in 0..<changeCount {
-            stateUpdater?.send(action)
+            updater.send(action)
         }
 
     }

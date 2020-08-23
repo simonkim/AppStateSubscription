@@ -11,7 +11,21 @@ protocol DiffableState: Equatable {
     func changedKeyPaths(from old: Self) -> [PartialKeyPath<Self>]
 }
 
-typealias SubscriptionKey = UUID
+class Subscription {
+    typealias Key = UUID
+
+    let key: Key
+    let unsubscribe: (_ key: Key) -> Void
+    
+    init(_ key: Key, unsubscribe: @escaping (_ key: Key) -> Void) {
+        self.key = key
+        self.unsubscribe = unsubscribe
+    }
+    
+    deinit {
+        unsubscribe(key)
+    }
+}
 
 class StateStore<State: DiffableState> {
     
@@ -26,7 +40,7 @@ class StateStore<State: DiffableState> {
     private var callbacks: [Callback<State>] = []
 
     struct Callback<State> {
-        let key: SubscriptionKey
+        let key: Subscription.Key
         let keyPath: PartialKeyPath<State>
         let block: StateChangeFunc<State>
         
@@ -36,21 +50,7 @@ class StateStore<State: DiffableState> {
             self.block = block
         }
     }
-    
-    class Subscription {
-        let key: SubscriptionKey
-        let unsubscribe: (_ key: SubscriptionKey) -> Void
-        
-        init(_ key: SubscriptionKey, unsubscribe: @escaping (_ key: SubscriptionKey) -> Void) {
-            self.key = key
-            self.unsubscribe = unsubscribe
-        }
-        
-        deinit {
-            unsubscribe(key)
-        }
-    }
-    
+
     init(_ state: State) {
         self.state = state
     }
@@ -68,7 +68,7 @@ class StateStore<State: DiffableState> {
         }
     }
     
-    private func unsubscribe(_ key: SubscriptionKey) {
+    private func unsubscribe(_ key: Subscription.Key) {
         print("store: unsubscribing key: \(key)")
 
         dq.async {
@@ -94,5 +94,3 @@ class StateStore<State: DiffableState> {
     }
 
 }
-
-var store = StateStore(AppState())

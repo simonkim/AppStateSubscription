@@ -14,6 +14,34 @@ struct AppState {
     var isNetworkReachable: Bool = false
 }
 
+protocol AppStateReadable {
+    func onChangeCount(block: @escaping (_ value: Int) -> Void) -> Subscription
+    func onChangeSecond(block: @escaping (_ value: Int) -> Void) -> Subscription
+}
+
+enum UpdateAction {
+    case countUp
+    case countDown
+    case second(Int)
+}
+
+protocol AppStateUpdatable {
+    mutating func send(_ change: UpdateAction)
+}
+
+extension AppState {
+    private static var store = StateStore(AppState())
+
+    static func reader() -> AppStateReadable {
+        return store
+    }
+    
+    static func updater() -> AppStateUpdatable {
+        return store
+    }
+}
+
+// MARK: - Implementation
 extension AppState: DiffableState {
     func changedKeyPaths(from old: Self) -> [PartialKeyPath<Self>] {
         guard self != old else { return [] }
@@ -29,26 +57,25 @@ extension AppState: DiffableState {
 
 }
 
-protocol AppStateReadable {
-    func onChange(_ keyPath: PartialKeyPath<AppState>,
-                  block: @escaping (_ state: AppState, _ keyPath: PartialKeyPath<AppState>) -> Void) -> StateStore<AppState>.Subscription
+extension StateStore: AppStateReadable where State == AppState {
+    func onChangeCount(block: @escaping (_ value: Int) -> Void) -> Subscription {
+        return onChange(\AppState.count, block: block)
+    }
     
-}
-
-extension StateStore: AppStateReadable where State == AppState {}
-
-enum StateChange {
-    case countUp
-    case countDown
-    case second(Int)
-}
-
-protocol AppStateUpdatable {
-    mutating func send(_ change: StateChange)
+    func onChangeSecond(block: @escaping (_ value: Int) -> Void) -> Subscription {
+        return onChange(\AppState.second, block: block)
+    }
+    
+    private func onChange<T>(_ keyPath: KeyPath<AppState, Int>, block: @escaping (_ value: T) -> Void ) -> Subscription {
+        return onChange(keyPath) { state, keyPath in
+            guard let count = state[keyPath: keyPath] as? T else { return }
+            block(count)
+        }
+    }
 }
 
 extension StateStore: AppStateUpdatable where State == AppState {
-    func send(_ change: StateChange) {
+    func send(_ change: UpdateAction) {
         var state = self.state
         switch change {
         case .countUp:
