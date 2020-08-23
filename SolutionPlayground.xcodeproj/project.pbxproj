@@ -16,6 +16,8 @@
 		F46A273124F169E800484000 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F46A272F24F169E800484000 /* LaunchScreen.storyboard */; };
 		F46A273C24F169E900484000 /* SolutionPlaygroundTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46A273B24F169E900484000 /* SolutionPlaygroundTests.swift */; };
 		F46A274724F169E900484000 /* SolutionPlaygroundUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46A274624F169E900484000 /* SolutionPlaygroundUITests.swift */; };
+		F46A3AC124F210C200484000 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46A3AC024F210C200484000 /* AppState.swift */; };
+		F46A3AC324F210F900484000 /* StateStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46A3AC224F210F900484000 /* StateStore.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +53,8 @@
 		F46A274224F169E900484000 /* SolutionPlaygroundUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SolutionPlaygroundUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F46A274624F169E900484000 /* SolutionPlaygroundUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolutionPlaygroundUITests.swift; sourceTree = "<group>"; };
 		F46A274824F169E900484000 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F46A3AC024F210C200484000 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		F46A3AC224F210F900484000 /* StateStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateStore.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,6 +105,7 @@
 		F46A272124F169E800484000 /* SolutionPlayground */ = {
 			isa = PBXGroup;
 			children = (
+				F46A3ABF24F210B000484000 /* State */,
 				F46A272224F169E800484000 /* AppDelegate.swift */,
 				F46A272424F169E800484000 /* SceneDelegate.swift */,
 				F46A272624F169E800484000 /* ViewController.swift */,
@@ -129,6 +134,15 @@
 				F46A274824F169E900484000 /* Info.plist */,
 			);
 			path = SolutionPlaygroundUITests;
+			sourceTree = "<group>";
+		};
+		F46A3ABF24F210B000484000 /* State */ = {
+			isa = PBXGroup;
+			children = (
+				F46A3AC024F210C200484000 /* AppState.swift */,
+				F46A3AC224F210F900484000 /* StateStore.swift */,
+			);
+			path = State;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -262,9 +276,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				F46A272724F169E800484000 /* ViewController.swift in Sources */,
+				F46A3AC124F210C200484000 /* AppState.swift in Sources */,
 				F46A272324F169E800484000 /* AppDelegate.swift in Sources */,
 				F46A272C24F169E800484000 /* ContentView.swift in Sources */,
 				F46A272524F169E800484000 /* SceneDelegate.swift in Sources */,
+				F46A3AC324F210F900484000 /* StateStore.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
