@@ -30,18 +30,18 @@ class StateStore<State: DiffableState> {
     init(_ state: State) {
         self.state = state
     }
-    
+
+    func onChange(_ keyPath: PartialKeyPath<State>, block: @escaping StateChangeFunc<State>) {
+        subscriptions.append(Subscription<State>(keyPath: keyPath, block: block))
+    }
+
     private func didChange(to state: State, from old: State) {
         state
             .changedKeyPaths(from: old)
             .forEach { didChange($0) }
     }
 
-    func onChange(_ keyPath: PartialKeyPath<State>, block: @escaping StateChangeFunc<State>) {
-        subscriptions.append(Subscription<State>(keyPath: keyPath, block: block))
-    }
-
-    func didChange(_ keyPath: PartialKeyPath<State>) {
+    private func didChange(_ keyPath: PartialKeyPath<State>) {
         subscriptions
             .filter { $0.keyPath == keyPath }
             .forEach { $0.block(state, keyPath) }

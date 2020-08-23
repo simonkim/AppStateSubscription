@@ -10,7 +10,7 @@ import Foundation
 
 struct AppState {
     var count: Int = 0
-    var seconds: Int = 0
+    var second: Int = 0
     var isNetworkReachable: Bool = false
 }
 
@@ -24,14 +24,22 @@ extension AppState: DiffableState {
         return result
     }
 
-    var intKeyPaths: [KeyPath<Self, Int>] { [\.count, \.seconds] }
+    var intKeyPaths: [KeyPath<Self, Int>] { [\.count, \.second] }
     var boolKeyPaths: [KeyPath<Self, Bool>] { [\.isNetworkReachable] }
 
 }
 
+protocol AppStateReadable {
+    func onChange(_ keyPath: PartialKeyPath<AppState>,
+                  block: @escaping (_ state: AppState, _ keyPath: PartialKeyPath<AppState>) -> Void)
+}
+
+extension StateStore: AppStateReadable where State == AppState {}
+
 enum StateChange {
     case countUp
     case countDown
+    case second(Int)
 }
 
 protocol AppStateUpdatable {
@@ -46,6 +54,9 @@ extension StateStore: AppStateUpdatable where State == AppState {
             state.count += 1
         case .countDown:
             state.count -= 1
+            
+        case .second(let value):
+            state.second = value
         }
         self.state = state
     }
